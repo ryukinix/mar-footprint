@@ -1,0 +1,1 @@
+-e git+https://git@gitlab.com/ryukinix/mar.git#egg=mar
