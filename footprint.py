@@ -10,15 +10,27 @@
 
 import mar
 import re
+import pandas as pd
+from tqdm import tqdm
 
 
-def slices(csvs, interval):
-    pass
+def count_stack(dataframe, interval):
+    global_stack = dict(free=[],
+                        malloc=[],
+                        total=[])
+    local_stack = dict(free=0, malloc=0)
+    values = tqdm(enumerate(dataframe.type),
+                  total=len(dataframe.index))
+    
+    for i, allocation in values:
+        if (i + 1) % interval == 0:
+            last_edge = global_stack['total'][-1]
+            global_stack['free'].append(local_stack['free'])
+            global_stack['malloc'].append(local_stack['malloc'])
+            global_stack['total'].append(last_edge + (local_stack, c))
 
-
-def count_stack(csvs):
-    pass
-
+    return pd.DataFrame(global_stack)
+ 
 
 def main():
     mar.cli.minimal()  # load the minimal cli from mar
@@ -33,12 +45,12 @@ def main():
     merged = (mar.processing.merge(m, f).sort_values('time')
               for m, f in dfs)  # merge free and mallocs ordering by time
     mean = mar.processing.mean(merged, by='time')  # mean of dataframes by time
-    slices = mar.procesing.slices(mean, options.interval)  # get slices 
-    output = mar.processing.count_stack(slices) # count the free and mallocs by time
+    slices = mar.procesing.slices(mean, options.interval)  # get slices
+    output = mar.processing.count_stack(slices) # count the free and mallocs
 
-    basename = mar.utils.get_firstname(csvs[0])
-    mar.graph.plot_save(output, basename, options)
-    mar.utils.save_csv(output, basename, options)
+    basename = mar.utils.get_firstname(csvs[0]) # get the basename 
+    mar.graph.plot_save(output, basename, options)  # plot and/or save image
+    mar.utils.save_csv(output, basename, options)  # save csv
 
 if __name__ == '__main__':
     main()
