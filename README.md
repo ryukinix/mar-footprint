@@ -5,15 +5,17 @@ This project is about a special standalone of MAR whose try get a footprint of e
 ## Getting Start
 
 ```
+# deps, python package manager
 sudo apt-get install python3-pip
-pip3 install setuptools
-pip3 install -r requirements.txt
+sudo pip3 install setuptools
+# project
+sudo pip3 install git+https://gitlab.com/ryukinix/mar-footprint
 ```
 
 ## Command Line Interface
 ```
-[lerax@starfox λ mar-footprint (master)]$ python footprint.py --help
-usage: footprint.py [-h] [-t TARGET] [-l LONG] [-i INTERVAL] csvs [csvs ...]
+usage: footprint [-h] [-t TARGET] [-i INTERVAL] [--show-graph] [--save-graph]
+                 csvs [csvs ...]
 
 Read malloc-free pairs CSVs from debugmalloc program,do a sequence of stats
 processing to processing data.On the final of processing, get a summarization
@@ -30,13 +32,16 @@ optional arguments:
   -t TARGET, --target TARGET
                         The path (can be a folder name or path) to save the
                         output
-  -l LONG, --long-range LONG
-                        The long range range like [x, y] (closed-range) or (a,
-                        b) (open-range) to labelize the allocation time. Use
-                        +inf or -inf to handle infinite intervals like (-inf,
-                        +inf) will get all allocations
   -i INTERVAL, --interval INTERVAL
                         The interval number to count longs on streaking rows
+  --show-graph          Show the graph after pre-processing
+  --save-graph          Save the graph on target after pre-processing
+
 ```
 
+# Example
+![report-sample](r-report.jpg)
+
 # Author
+
+* Manoel Vilela
