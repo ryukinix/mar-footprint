@@ -13,7 +13,7 @@ import pandas as pd
 import mar
 
 
-__version__ = '0.1'
+__version__ = '0.1.1'
 __date__ = '2016'
 __author__ = 'Manoel Vilela'
 __email__ = 'manoel_vilela@engineer.com'
@@ -53,15 +53,15 @@ def main():
     mar.cli.graph()
     options = mar.cli.parser.parse_args()  # get the options
     csvs = mar.utils.walk(options.csvs)  # load csvs
-    groups = mar.processing.group(csvs)  # group each free malloc
-    dfs = mar.processing.parse(groups, nil=True)   # parse csv to dataframe
-    merged = (mar.processing.merge(m, f).sort_values('time')
+    groups = mar.processing.io.group(csvs)  # group each free malloc
+    dfs = mar.processing.io.parse(groups, nil=True)   # parse csv to dataframe
+    merged = (mar.processing.actions.merge(m, f).sort_values('time')
               for m, f in dfs)  # merge free and mallocs ordering by time
-    mean = mar.processing.mean(merged, total=len(groups), by='time')
-    output = count_stack(mean, options.interval) # count the free and mallocs
-    basename = mar.utils.get_firstname(csvs[0])  # get the basename 
+    mean = mar.processing.actions.mean(merged, total=len(groups), by='time')
+    output = count_stack(mean, options.interval)  # count the free and mallocs
+    basename = mar.utils.get_firstname(csvs[0], 'footprint')
     mar.graph.plot_save(output, basename, options)  # plot and/or save image
-    mar.utils.save_csv(output, basename, options)  # save csv
+    mar.processing.io.save(output, basename)  # save csv
 
 if __name__ == '__main__':
     main()
